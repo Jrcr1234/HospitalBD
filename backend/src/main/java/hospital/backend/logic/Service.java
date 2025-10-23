@@ -4,6 +4,7 @@ import hospital.backend.data.UsuarioDao;
 import hospital.backend.data.MedicamentoDao;
 import hospital.backend.data.PacienteDao;
 import hospital.backend.data.MedicoDao;
+import hospital.backend.data.FarmaceutaDao;
 import hospital.protocol.logic.*;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +30,7 @@ public class Service {
     private MedicamentoDao medicamentoDao;
     private PacienteDao pacienteDao;
     private MedicoDao medicoDao;
+    private FarmaceutaDao farmaceutaDao;
     // Aquí irán los demás DAOs: PacienteDao, MedicamentoDao, etc.
 
     private Service() {
@@ -37,6 +39,7 @@ public class Service {
         this.medicamentoDao = new MedicamentoDao();
         this.pacienteDao = new PacienteDao();
         this.medicoDao = new MedicoDao();
+        this.farmaceutaDao = new FarmaceutaDao();
     }
 
     // =======================================================
@@ -67,7 +70,7 @@ public class Service {
         //    como registrar el evento de cambio de clave en un log.
     }
 
-    // --- MÉTODOS CRUD PARA MEDICAMENTOS (IMPLEMENTADOS) ---
+    // --- MÉTODOS CRUD PARA MEDICAMENTOS ---
 
     public void createMedicamento(Medicamento med) throws Exception {
         // Podríamos añadir validación aquí si el código ya existe antes de llamar al DAO
@@ -104,7 +107,7 @@ public class Service {
         return medicamentoDao.search(filtro); // Llama al DAO
     }
 
-    // --- MÉTODOS CRUD PARA PACIENTES (IMPLEMENTADOS) ---
+    // --- MÉTODOS CRUD PARA PACIENTES ---
 
     public void createPaciente(Paciente p) throws Exception {
         // Validación básica: ¿Ya existe un paciente con ese ID?
@@ -140,7 +143,7 @@ public class Service {
     }
 
 
-    // --- MÉTODOS CRUD PARA MÉDICOS (IMPLEMENTADOS) ---
+    // --- MÉTODOS CRUD PARA MÉDICOS ---
 
     public void createMedico(Medico m) throws Exception {
         // Validación: Asegurarse de que el ID no exista ya como *cualquier* tipo de usuario.
@@ -178,36 +181,40 @@ public class Service {
         return medicoDao.search(filtro); // Llama al DAO
     }
 
-    // --- MÉTODOS CRUD PARA FARMACEUTAS (A IMPLEMENTAR) ---
-    // ... (siguen con UnsupportedOperationException) ...
+    // --- MÉTODOS CRUD PARA FARMACEUTAS (IMPLEMENTADOS) ---
+
     public void createFarmaceuta(Farmaceuta f) throws Exception {
-        // TODO: Validar ID. Llamar a farmaceutaDao.create(f);
-        throw new UnsupportedOperationException("Método createFarmaceuta no implementado.");
+        // Validación básica: ID no debe existir como ningún tipo de usuario
+        Usuario existente = usuarioDao.readById(f.getId()); // Usamos UsuarioDao para buscar cualquier tipo
+        if (existente != null) {
+            throw new Exception("La cédula ya existe para otro usuario.");
+        }
+        // El FarmaceutaDao se encarga de asignar clave por defecto si es necesario
+        farmaceutaDao.create(f); // Llama al DAO
     }
 
     public Farmaceuta readFarmaceuta(String id) throws Exception {
-        // TODO: return farmaceutaDao.read(id);
-        throw new UnsupportedOperationException("Método readFarmaceuta no implementado.");
+        Farmaceuta f = farmaceutaDao.read(id); // Llama al DAO
+        if (f == null) {
+            throw new Exception("Farmaceuta no encontrado.");
+        }
+        return f;
     }
 
     public void updateFarmaceuta(Farmaceuta f) throws Exception {
-        // TODO: Llamar a farmaceutaDao.update(f);
-        throw new UnsupportedOperationException("Método updateFarmaceuta no implementado.");
+        farmaceutaDao.update(f); // Llama al DAO
     }
 
     public void deleteFarmaceuta(String id) throws Exception {
-        // TODO: Llamar a farmaceutaDao.delete(id);
-        throw new UnsupportedOperationException("Método deleteFarmaceuta no implementado.");
+        farmaceutaDao.delete(id); // Llama al DAO
     }
 
     public List<Farmaceuta> getFarmaceutas() throws Exception {
-        // TODO: return farmaceutaDao.findAll();
-        throw new UnsupportedOperationException("Método getFarmaceutas no implementado.");
+        return farmaceutaDao.findAll(); // Llama al DAO
     }
 
     public List<Farmaceuta> searchFarmaceutas(String filtro) throws Exception {
-        // TODO: return farmaceutaDao.search(filtro);
-        throw new UnsupportedOperationException("Método searchFarmaceutas no implementado.");
+        return farmaceutaDao.search(filtro); // Llama al DAO
     }
 
     // --- MÉTODOS PARA GESTIÓN DE RECETAS (A IMPLEMENTAR) ---

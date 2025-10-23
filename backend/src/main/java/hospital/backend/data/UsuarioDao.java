@@ -20,6 +20,22 @@ public class UsuarioDao {
      * @return El objeto Usuario si se encuentra, de lo contrario null.
      * @throws Exception Si ocurre un error de SQL.
      */
+
+    public Usuario readById(String id) throws Exception {
+        String sql = "SELECT * FROM Usuario WHERE id = ?"; // Busca solo por ID
+        try {
+            PreparedStatement stm = db.prepareStatement(sql);
+            stm.setString(1, id);
+            ResultSet rs = db.executeQuery(stm);
+            if (rs.next()) {
+                return from(rs); // Reutiliza el método 'from'
+            } else {
+                return null; // No encontrado
+            }
+        } catch (SQLException ex) {
+            throw new Exception("Error al leer el usuario por ID", ex);
+        }
+    }
     public Usuario read(String id, String clave) throws Exception {
         // 1. Sentencia SQL para la consulta
         String sql = "SELECT * FROM Usuario WHERE id = ? AND clave = ?";

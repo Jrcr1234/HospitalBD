@@ -87,7 +87,7 @@ public class Worker implements Runnable {
             case "getPacientes": handleGetPacientes(); break;
             case "searchPacientes": handleSearchPacientes(); break;
 
-            // --- Médicos (pendientes) ---
+            // --- Médicos  ---
             case "createMedico": handleCreateMedico(); break;
             case "readMedico": handleReadMedico(); break;
             case "updateMedico": handleUpdateMedico(); break;
@@ -95,7 +95,7 @@ public class Worker implements Runnable {
             case "getMedicos": handleGetMedicos(); break;
             case "searchMedicos": handleSearchMedicos(); break;
 
-            // --- Farmaceutas (pendientes) ---
+            // --- Farmaceutas  ---
             case "createFarmaceuta": handleCreateFarmaceuta(); break;
             case "readFarmaceuta": handleReadFarmaceuta(); break;
             case "updateFarmaceuta": handleUpdateFarmaceuta(); break;
@@ -260,38 +260,38 @@ public class Worker implements Runnable {
 
     // --- Farmaceutas Handlers ---
     private void handleCreateFarmaceuta() throws IOException, ClassNotFoundException, Exception {
-        Farmaceuta f = (Farmaceuta) input.readObject();
-        service.createFarmaceuta(f);
-        output.writeObject("OK");
+        Farmaceuta f = (Farmaceuta) input.readObject(); // Lee el objeto Farmaceuta
+        service.createFarmaceuta(f); // Llama al Service
+        output.writeObject("OK"); // Envía confirmación
     }
 
     private void handleReadFarmaceuta() throws IOException, ClassNotFoundException, Exception {
-        String id = (String) input.readObject();
-        Farmaceuta f = service.readFarmaceuta(id);
-        output.writeObject(f);
+        String id = (String) input.readObject(); // Lee el ID
+        Farmaceuta f = service.readFarmaceuta(id); // Llama al Service
+        output.writeObject(f); // Envía el objeto Farmaceuta (o null)
     }
 
     private void handleUpdateFarmaceuta() throws IOException, ClassNotFoundException, Exception {
-        Farmaceuta f = (Farmaceuta) input.readObject();
-        service.updateFarmaceuta(f);
-        output.writeObject("OK");
+        Farmaceuta f = (Farmaceuta) input.readObject(); // Lee el objeto Farmaceuta
+        service.updateFarmaceuta(f); // Llama al Service
+        output.writeObject("OK"); // Envía confirmación
     }
 
     private void handleDeleteFarmaceuta() throws IOException, ClassNotFoundException, Exception {
-        String id = (String) input.readObject();
-        service.deleteFarmaceuta(id);
-        output.writeObject("OK");
+        String id = (String) input.readObject(); // Lee el ID
+        service.deleteFarmaceuta(id); // Llama al Service
+        output.writeObject("OK"); // Envía confirmación
     }
 
     private void handleGetFarmaceutas() throws IOException, Exception {
-        List<Farmaceuta> list = service.getFarmaceutas();
-        output.writeObject(list);
+        List<Farmaceuta> list = service.getFarmaceutas(); // Llama al Service
+        output.writeObject(list); // Envía la lista
     }
 
     private void handleSearchFarmaceutas() throws IOException, ClassNotFoundException, Exception {
-        String filtro = (String) input.readObject();
-        List<Farmaceuta> list = service.searchFarmaceutas(filtro);
-        output.writeObject(list);
+        String filtro = (String) input.readObject(); // Lee el filtro
+        List<Farmaceuta> list = service.searchFarmaceutas(filtro); // Llama al Service
+        output.writeObject(list); // Envía la lista
     }
 
     // --- Recetas Handlers ---
