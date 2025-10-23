@@ -62,7 +62,7 @@ public class Controller {
             hospital.frontend.presentation.prescripcion.dosis_details.View detailsView = new hospital.frontend.presentation.prescripcion.dosis_details.View();
             new hospital.frontend.presentation.prescripcion.dosis_details.Controller(detailsView, detailsModel, detailsDialog, this.prescripcionModel);
 
-            detailsView.init(); // Inicializamos la vista de detalles
+            // detailsView.init(); // Inicializamos la vista de detalles
 
             detailsDialog.setContentPane(detailsView.getPanel());
             detailsDialog.pack();

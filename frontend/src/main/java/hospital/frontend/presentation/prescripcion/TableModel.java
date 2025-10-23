@@ -2,11 +2,15 @@ package hospital.frontend.presentation.prescripcion;
 
 import hospital.protocol.logic.LineaDetalle;
 import javax.swing.table.AbstractTableModel;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 public class TableModel extends AbstractTableModel {
     private List<LineaDetalle> rows;
     private final String[] cols = {"Código", "Medicamento", "Cantidad", "Indicaciones", "Duración (días)"};
+
+    private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
     public TableModel(List<LineaDetalle> rows) { this.rows = rows; }
     public void setRows(List<LineaDetalle> rows) {

@@ -3,10 +3,14 @@ package hospital.frontend.presentation.mainview.historicoRecetas;
 import hospital.protocol.logic.Receta;
 import javax.swing.table.AbstractTableModel;
 import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class TableModel extends AbstractTableModel {
     private List<Receta> rows;
     private final String[] cols;
+    // --- Añadir el formateador ---
+    private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy"); // O el formato que se prefiera
 
     public TableModel() {
         this.cols = new String[]{"Código", "Paciente", "Médico", "Fecha", "Estado"};
@@ -35,7 +39,9 @@ public class TableModel extends AbstractTableModel {
             case 0: return receta.getCodigo();
             case 1: return (receta.getPaciente() != null) ? receta.getPaciente().getNombre() : "N/A";
             case 2: return (receta.getMedico() != null) ? receta.getMedico().getNombre() : "N/A";
-            case 3: return (receta.getFechaConfeccion() != null) ? receta.getFechaConfeccion().toString() : "N/A";
+            case 3:
+                Date fechaConf = receta.getFechaConfeccion();
+                return (fechaConf != null) ? sdf.format(fechaConf) : "N/A";
             case 4: return (receta.getEstado() != null) ? receta.getEstado().name() : "N/A";
             default: return "";
         }

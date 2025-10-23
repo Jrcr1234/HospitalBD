@@ -26,7 +26,7 @@ public class View {
             hospital.frontend.presentation.mainview.medicamentos.Model medModel = new hospital.frontend.presentation.mainview.medicamentos.Model();
             hospital.frontend.presentation.mainview.medicamentos.View medView = new hospital.frontend.presentation.mainview.medicamentos.View();
             new hospital.frontend.presentation.mainview.medicamentos.Controller(medView, medModel);
-            medView.init();
+            //medView.init();
 
             hospital.frontend.presentation.mainview.pacientes.Model pacModel = new hospital.frontend.presentation.mainview.pacientes.Model();
             hospital.frontend.presentation.mainview.pacientes.View pacView = new hospital.frontend.presentation.mainview.pacientes.View();
@@ -47,7 +47,7 @@ public class View {
             hospital.frontend.presentation.prescripcion.Model prescModel = new hospital.frontend.presentation.prescripcion.Model();
             hospital.frontend.presentation.prescripcion.View prescView = new hospital.frontend.presentation.prescripcion.View();
             new hospital.frontend.presentation.prescripcion.Controller(prescView, prescModel);
-            prescView.init();
+            //prescView.init();
 
             // --- Módulo de Farmaceuta ---
             hospital.frontend.presentation.despacho.Model despachoModel = new hospital.frontend.presentation.despacho.Model();
@@ -56,10 +56,15 @@ public class View {
             despachoView.init();
 
             // --- Módulos Comunes ---
-            Model historicoModel = new Model();
-            hospital.frontend.presentation.mainview.historicoRecetas.View historicoView = new hospital.frontend.presentation.mainview.historicoRecetas.View();
-            new Controller(historicoView, historicoModel);
+            System.out.println(">>> MainView: Inicializando Histórico...");
+            hospital.frontend.presentation.mainview.historicoRecetas.Model historicoModel =
+                    new hospital.frontend.presentation.mainview.historicoRecetas.Model(); // Usa el Model correcto
+            hospital.frontend.presentation.mainview.historicoRecetas.View historicoView =
+                    new hospital.frontend.presentation.mainview.historicoRecetas.View();
+            hospital.frontend.presentation.mainview.historicoRecetas.Controller historicoController =
+                    new hospital.frontend.presentation.mainview.historicoRecetas.Controller(historicoView, historicoModel);
             historicoView.init();
+            System.out.println(">>> MainView: Histórico inicializado.");
 
             hospital.frontend.presentation.mainview.dashboard.Model dashboardModel = new hospital.frontend.presentation.mainview.dashboard.Model();
             hospital.frontend.presentation.mainview.dashboard.View dashboardView = new hospital.frontend.presentation.mainview.dashboard.View();
@@ -113,7 +118,12 @@ public class View {
             tabbedPane.addTab("Dashboard", dashboardIcon, dashboardView.getPanel());
 
             ImageIcon historicoIcon = GuiUtils.scaleIcon(new ImageIcon(getClass().getResource("/icons/receta.png")), tabIconSize, tabIconSize);
+            System.out.println(">>> MainView: Añadiendo pestaña Histórico...");
             tabbedPane.addTab("Histórico", historicoIcon, historicoView.getPanel());
+            System.out.println(">>> MainView: Pestaña Histórico añadida.");
+            // === CAMBIO: Llamar a show() DESPUÉS de añadir la pestaña ===
+            historicoController.show();
+            // =======================================================
 
             ImageIcon aboutIcon = GuiUtils.scaleIcon(new ImageIcon(getClass().getResource("/icons/info.png")), tabIconSize, tabIconSize);
             tabbedPane.addTab("Acerca de", aboutIcon, aboutView.getPanel());

@@ -19,9 +19,12 @@ public class View implements PropertyChangeListener {
     private Controller controller;
     private Model model;
 
-    public View() {}
+    public View() {
+        init();
+    }
 
     public void init() {
+        System.out.println(">>> DosisDetails.View: init() ejecutado");
         // --- Asignación de Iconos ---
         try {
             int iconSize = 24;
@@ -32,7 +35,10 @@ public class View implements PropertyChangeListener {
         }
 
         // --- ActionListeners ---
-        guardarBtn.addActionListener(e -> controller.guardar());
+        guardarBtn.addActionListener(e -> {
+                    System.out.println(">>> DosisDetails.View: Listener Guardar presionado");
+                    controller.guardar();
+        });
         cancelarBtn.addActionListener(e -> controller.cancelar());
 
         // Llenado de ComboBoxes

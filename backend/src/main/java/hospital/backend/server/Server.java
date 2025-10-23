@@ -1,14 +1,14 @@
 package hospital.backend.server;
 
 import hospital.backend.logic.Service;
-
+import hospital.protocol.Protocol;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.atomic.AtomicInteger; // Importar AtomicInteger
 
 public class Server {
-    private static final int PORT = 9090; // Puerto en el que el servidor escuchará
+    private static final int SYNC_PORT = Protocol.SYNC_PORT; // Puerto en el que el servidor escuchará
     // --- NUEVO: Contador atómico para clientes ---
     // AtomicInteger es seguro para usar con hilos
     private static final AtomicInteger activeClients = new AtomicInteger(0);
@@ -16,8 +16,8 @@ public class Server {
     public static void main(String[] args) {
         try {
             Service service = Service.getInstance();
-            ServerSocket listener = new ServerSocket(PORT);
-            System.out.println(">>> Servidor escuchando en el puerto " + PORT + "...");
+            ServerSocket listener = new ServerSocket(SYNC_PORT);
+            System.out.println(">>> Servidor escuchando en el puerto " + SYNC_PORT + "...");
 
             while (true) {
                 Socket clientSocket = listener.accept();

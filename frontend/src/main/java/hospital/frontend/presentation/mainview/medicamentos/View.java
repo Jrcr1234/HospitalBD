@@ -27,7 +27,7 @@ public class View implements PropertyChangeListener {
     private TableModel medicamentosTableModel;
 
     public View() {
-        // El constructor AHORA ESTÁ VACÍO.
+        init();
     }
 
 

@@ -6,7 +6,7 @@ public class LineaDetalle implements Serializable {
     private Medicamento medicamento;
     private int cantidad;
     private String indicaciones;
-    private int duracionTratamiento; // en días
+    private Integer duracionTratamiento; // en días
 
     public LineaDetalle() {
         this.medicamento = null;
@@ -29,6 +29,6 @@ public class LineaDetalle implements Serializable {
     public void setCantidad(int cantidad) { this.cantidad = cantidad; }
     public String getIndicaciones() { return indicaciones; }
     public void setIndicaciones(String indicaciones) { this.indicaciones = indicaciones; }
-    public int getDuracionTratamiento() { return duracionTratamiento; }
-    public void setDuracionTratamiento(int duracionTratamiento) { this.duracionTratamiento = duracionTratamiento; }
+    public Integer getDuracionTratamiento() { return duracionTratamiento; }
+    public void setDuracionTratamiento(Integer duracionTratamiento) { this.duracionTratamiento = duracionTratamiento; }
 }

@@ -50,61 +50,76 @@ public class Controller {
     // --- MÉTODO 'registrarReceta' CORREGIDO CON MVC Y SWINGWORKER ---
     public void registrarReceta() {
         try {
-            // --- 1. Validaciones locales ---
+            // --- 1. Validaciones locales (sin cambios) ---
             if (model.getPaciente() == null) {
                 throw new Exception("Debe seleccionar un paciente.");
             }
             if (model.getLineas().isEmpty()) {
                 throw new Exception("La receta debe tener al menos un medicamento.");
             }
-            if (view.getFechaRetiro() == null) {
-                throw new Exception("Debe seleccionar una fecha de retiro.");
-            }
+            // Eliminamos la validación de fecha de retiro aquí, ya que el backend la pone null
+            // if (view.getFechaRetiro() == null) {
+            //     throw new Exception("Debe seleccionar una fecha de retiro.");
+            // }
 
-            // Usamos SwingWorker para la operación de red
-            new SwingWorker<String, Void>() {
+            // === CAMBIO 1: El SwingWorker ahora maneja 'Receta', no 'String' ===
+            new SwingWorker<Receta, Void>() {
                 @Override
-                protected String doInBackground() throws Exception {
-                    // --- 2. Creación del Objeto (dentro del hilo de fondo) ---
-                    Receta nuevaReceta = new Receta();
+                // === CAMBIO 2: doInBackground devuelve 'Receta' ===
+                protected Receta doInBackground() throws Exception {
+                    // --- 2. Creación del Objeto (sin cambios) ---
+                    Receta recetaAGuardar = new Receta();
                     Medico medicoLogueado = (Medico) Sesion.getUsuario();
                     Paciente pacienteSeleccionado = model.getPaciente();
 
-                    nuevaReceta.setMedico(medicoLogueado);
-                    nuevaReceta.setPaciente(pacienteSeleccionado);
-                    nuevaReceta.setMedicoId(medicoLogueado.getId());
-                    nuevaReceta.setPacienteId(pacienteSeleccionado.getId());
-                    nuevaReceta.setFechaConfeccion(view.getFechaConfeccion());
-                    nuevaReceta.setLineasDetalle(model.getLineas());
-                    nuevaReceta.setFechaRetiro(view.getFechaRetiro());
+                    recetaAGuardar.setMedico(medicoLogueado);
+                    recetaAGuardar.setPaciente(pacienteSeleccionado);
+                    recetaAGuardar.setMedicoId(medicoLogueado.getId());
+                    recetaAGuardar.setPacienteId(pacienteSeleccionado.getId());
+                    // La fecha de confección
+                    recetaAGuardar.setFechaConfeccion(view.getFechaConfeccion());
+                    recetaAGuardar.setLineasDetalle(model.getLineas());
+                    // La fecha de retiro inicial la pone el backend
+                    recetaAGuardar.setFechaRetiro(view.getFechaRetiro());
 
-                    // --- 3. Llamada al Servicio ---
-                    Service.getInstance().createReceta(nuevaReceta);
+                    // --- 3. Llamada al Servicio (¡Capturamos el resultado!) ---
+                    // === CAMBIO 3: Guardamos la receta devuelta por el service ===
+                    Receta recetaCreada = Service.getInstance().createReceta(recetaAGuardar);
 
-                    // --- 4. Devolvemos el código para que 'done()' lo reciba ---
-                    return nuevaReceta.getCodigo();
+                    // --- 4. Devolvemos el objeto Receta completo ---
+                    // === CAMBIO 4: Devolvemos el objeto, no solo el código ===
+                    return recetaCreada;
                 }
 
                 @Override
                 protected void done() {
                     try {
-                        String codigoGenerado = get(); // Obtiene el código de 'doInBackground'
-                        model.clear();
-                        // Notificamos a la vista el éxito a través del modelo
-                        model.setSuccessMessage("Receta " + codigoGenerado + " registrada exitosamente.");
+                        // === CAMBIO 5: 'get()' ahora devuelve el objeto Receta ===
+                        Receta recetaConfirmada = get();
+
+                        model.clear(); // Limpia el formulario
+
+                        // === CAMBIO 6: Usamos el código de la receta devuelta ===
+                        model.setSuccessMessage("Receta " + recetaConfirmada.getCodigo() + " registrada exitosamente.");
+
                     } catch (Exception ex) {
-                        // Si algo falló en el hilo de fondo, lo notificamos al modelo.
-                        model.setErrorMessage(ex.getCause().getMessage());
+                        // Manejo de errores (sin cambios)
+                        try {
+                            // Intenta obtener la causa raíz del error (más útil)
+                            model.setErrorMessage(ex.getCause().getMessage());
+                        } catch (Exception e) {
+                            // Si no hay causa raíz, muestra el mensaje general
+                            model.setErrorMessage(ex.getMessage());
+                        }
                     }
                 }
             }.execute();
 
         } catch (Exception e) {
-            // Captura los errores de validación y los pasa al modelo.
+            // Captura los errores de validación y los pasa al modelo (sin cambios)
             model.setErrorMessage(e.getMessage());
         }
     }
-
     public void limpiar() {
         model.clear();
     }

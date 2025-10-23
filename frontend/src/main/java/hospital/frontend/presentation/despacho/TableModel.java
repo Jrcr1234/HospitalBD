@@ -3,10 +3,14 @@ package hospital.frontend.presentation.despacho;
 import hospital.protocol.logic.Receta;
 import javax.swing.table.AbstractTableModel;
 import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class TableModel extends AbstractTableModel {
     private List<Receta> rows;
     private final String[] cols = {"Código", "Paciente", "Fecha Retiro", "Estado"};
+    // --- Añadir el formateador ---
+    private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
     public TableModel(List<Receta> rows) {
         this.rows = rows;
@@ -38,32 +42,17 @@ public class TableModel extends AbstractTableModel {
         switch (col) {
             case 0:
                 return receta.getCodigo();
-
             case 1:
-                // Verificamos si el paciente existe
-                if (receta.getPaciente() != null) {
-                    return receta.getPaciente().getNombre();
-                } else {
-                    return "(Paciente no encontrado)";
-                }
+                return (receta.getPaciente() != null) ? receta.getPaciente().getNombre() : "(Paciente no encontrado)";
 
+            // === Aplicar formato a la Fecha Retiro ===
             case 2:
-                // Verificamos si la fecha existe
-                if (receta.getFechaRetiro() != null) {
-                    return receta.getFechaRetiro().toString();
-                } else {
-                    return "(Sin fecha)";
-                }
+                Date fechaRet = receta.getFechaRetiro();
+                return (fechaRet != null) ? sdf.format(fechaRet) : "(Sin fecha)";
+            // =======================================
 
             case 3:
-                // Verificamos si el estado existe
-                if (receta.getEstado() != null) {
-                    return receta.getEstado().name();
-                } else {
-                    return "(Sin estado)"; // Mensaje de advertencia
-                }
-                // ======== FIN DE LA NUEVA CORRECCIÓN ========
-
+                return (receta.getEstado() != null) ? receta.getEstado().name() : "(Sin estado)";
             default:
                 return "";
         }
